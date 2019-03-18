@@ -25,6 +25,9 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/get-user-reports/{id}', 'ReportController@get_user_reports');
 
+Route::post('/profiless', 'ProfileController@update_avatar');
+
+Route::get('/profiles/settings', 'ProfileController@settings');
 
 Route::resource('/profiles', 'ProfileController');
 Route::resource('/reports' , 'ReportController');

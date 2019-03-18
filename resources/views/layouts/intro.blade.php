@@ -5,7 +5,7 @@
          <div class="banner_content">
              <div class="media">
                  <div class="d-flex">
-                     <img src="/uploads/avatar/{{ $user->avatar }}" alt="{{ asset('/uploads/avatar/default.jpg')}}">
+                     <img src="/uploads/avatars/{{ $user->avatar }}" alt="{{ asset('/uploads/avatar/default.jpg')}}">
                  </div>
                  <div class="media-body">
                      <div class="personal_text">

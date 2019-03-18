@@ -84,7 +84,7 @@
                                 <li class="nav-item submenu dropdown">
 									<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fas fa-power-off"></i>GUD BYE</a>
 									<ul class="dropdown-menu">
-										<li class="nav-item"><a class="nav-link" href="blog.html">setting</a></li>
+										<li class="nav-item"><a class="nav-link" href="/profiles/settings">setting</a></li>
 										<li class="nav-item">
 
                                             <a class="dropdown-item" href="{{ route('logout') }}"
