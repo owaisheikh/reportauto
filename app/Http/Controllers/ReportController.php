@@ -6,6 +6,7 @@ use App\report;
 use Auth;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 
 class ReportController extends Controller
 {
@@ -26,7 +27,8 @@ class ReportController extends Controller
         
 
         if (auth()->user()->can('view all reports')) {
-             $report = report::with('user')->get();
+            
+            $report = report::with('user')->get();
              
              $user = User::where('id', '!=', auth()->id())->get();
 
@@ -36,7 +38,7 @@ class ReportController extends Controller
         
          else{
              
-        $report = report::where('owner_id', auth()->id())->get();
+        $report = report::where('owner_id', auth()->id())->orderBy('id', 'DESC')->get();
         $user = Auth::user();
        
        return view('reports.index' , compact('report', 'user'));
@@ -78,7 +80,9 @@ class ReportController extends Controller
             $storereport['owner_id']= auth()->id();
 
        
-         report::create($storereport);
+           report::create($storereport);
+        //         $user = 'test@gmail.com';
+        //  Mail::to($users)->send(new reportsended);
         
          return redirect('/reports' )->with('alert', 'Updated!');
     }
@@ -172,5 +176,87 @@ class ReportController extends Controller
     {
         $report = report::where('owner_id', $id)->with('user')->orderBy('id', 'DESC')->get();
         return view('reports.user_reports', compact('report'));
+    }
+
+    public function search_person(Request $request){
+
+        if($request()->ajax())
+        {
+
+            $output = '';
+        $search = $request->get('search');  
+
+        if($search != '')
+        {
+           $report = report::where('project_name','LIKE', '%' . $search . '%' )->get();
+
+          
+        }
+        else{
+            $report = report::where('owner_id', $id)->with('user')->orderBy('id', 'DESC')->get();
+
+        }
+        $total_data = $report->count();
+
+            if($total_data > 0){
+                    foreach ($report as $reports) {
+                            $output .= '
+                            <div class="changing">
+              
+           
+                            <ul>
+                               <div class="container-fluid mt--7">
+                                  <div class="card">
+                                     '.$reports->user->name.'
+                                     <h3>
+                                     
+                                      '.$reports->project_name.'
+                                       </h3>
+                                     <h5>
+                                     date of creation : '.$reports->created_at->format('m/d/Y') .' 
+                                     </h5>
+                                     <h5> 
+                                     Time of creation : '.$reports->created_at->format('H:i:s').' </h5>
+                                  </div>
+                               </div>
+                            </ul>
+                            <br>
+                            <hr style="background-color: #fff;
+                               border-top: 2px dashed #8c8b8b">
+                            <br>
+                         </div>
+                            
+                            ';   
+                    }
+            } 
+            
+            else{
+
+                $output = '
+                <div class="card-body" style="color:blue;">
+                
+                <div class="container-fluid mt--7">
+                 <div class="card">
+
+                        <b> NO RECORD FOUND </b>
+                 </div>
+                 </div>
+                
+                
+                </div>
+                
+                ';
+            }  
+            $report = array(
+                    'table_data' => $output,
+                    'total_data' => $total_data
+
+
+            )     ;
+            json_encode($report);
+    
+    }
+
+    
     }
 }

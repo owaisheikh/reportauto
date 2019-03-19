@@ -1,6 +1,7 @@
 @extends('layouts.master')
 
 @section('bodybaba')
+<script src="{{ asset('js/time.js')}}"></script>
 
 <section class="home_banner_area">
     <div class="container box_1620">

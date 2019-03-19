@@ -5,6 +5,7 @@
 @endsection
 
 @section('bodybaba')
+<script src="{{ asset('js/time.js')}}"></script>
 
 <style>
      table, th, td {

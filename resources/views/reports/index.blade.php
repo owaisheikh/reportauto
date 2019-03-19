@@ -5,7 +5,8 @@
 @endsection
 
 @section('bodybaba')
-	
+<script src="{{ asset('js/time.js')}}"></script>
+
 @if(session()->has('message'))
 <div class="alert alert-danger">
     {{ session()->get('message') }}
