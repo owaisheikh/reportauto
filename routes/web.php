@@ -29,7 +29,7 @@ Route::post('/profiless', 'ProfileController@update_avatar');
 
 Route::get('/profiles/settings', 'ProfileController@settings');
 
-Route::post('/search' , 'ReportController@search_person');
+Route::get('/search' , 'ReportController@search_person');
 
 
 Route::resource('/profiles', 'ProfileController');

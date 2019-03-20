@@ -64,23 +64,70 @@ class ReportController extends Controller
      */
     public function store(Request $request)
     {
+
+        
         $storereport = request()->validate([
 
-            'project_name' => ['required', 'min:3'],
-            'project_description' => ['required', 'min:3'],
-            'no_of_hours_spend' => ['required'],
-            'no_of_total_hours' => ['required'],
             'time_in' => ['required'],
             'time_out' => ['required'],
             'no_of_hours_in_office' => ['required'],
             'no_of_hour_out_of_office' => ['required'],
 
             ]);
-           
             $storereport['owner_id']= auth()->id();
 
+         
+            
+
+        $rules = [];
+
+
+        foreach($request->input('project_name','project_description','no_of_hours_spend') as $key) {
+            
+            $rules["project_name.{$key}"] = 'required';
+            $rules["project_description.{$key}"] = 'required';
+            $rules["no_of_hours_spend.{$key}"] = 'required';
+            
+
+        }
+
+
+        $validator = Validator::make($request->all(), $rules);
+
+
+        if ($validator->passes()) {
+
+
+            foreach($request->input('project_name','project_description','no_of_hours_spend') as $key => $value) {
+
+                report::create(
+                    
+                    ['project_name'=>$value],
+                    ['project_description'=>$value],
+                    ['no_of_hours_spend'=>$value],
+                    $storereport
+                
+                );
+            }
+
+
+            return response()->json(['success'=>'done']);
+        }
+
+
+        return response()->json(['error'=>$validator->errors()->all()]);
+    
+     
+
+      
+            
+            
+     
+           
+         
+
        
-           report::create($storereport);
+          
         //         $user = 'test@gmail.com';
         //  Mail::to($users)->send(new reportsended);
         
@@ -137,18 +184,22 @@ class ReportController extends Controller
      */
     public function update(Request $request, report $report)
     {
+        for ($i = 1; $i < count('project_name'); $i++) {
+            
         $report->update(request()->validate([
-
-            'project_name' => ['required', 'min:3'],
-            'project_description' => ['required', 'min:3'],
-            'no_of_hours_spend' => ['required'],
+         
+       
+            'project_name[$i]' => ['required', 'min:3'],
+            'project_description[$i]' => ['required', 'min:3'],
+            'no_of_hours_spend[$i]' => ['required'],
             'no_of_total_hours' => ['required'],
             'time_in' => ['required'],
             'time_out' => ['required'],
             'no_of_hours_in_office' => ['required'],
             'no_of_hour_out_of_office' => ['required'],
-
+            
         ]));
+                }
            
             $report['owner_id']= auth()->id();
            
@@ -178,9 +229,10 @@ class ReportController extends Controller
         return view('reports.user_reports', compact('report'));
     }
 
-    public function search_person(Request $request){
+    public function search_person(Request $request)
+    {
 
-        if($request()->ajax())
+        if ($request->ajax())
         {
 
             $output = '';
@@ -208,10 +260,9 @@ class ReportController extends Controller
                                <div class="container-fluid mt--7">
                                   <div class="card">
                                      '.$reports->user->name.'
-                                     <h3>
-                                     
+                                     <h3><a href="/reports/ '.$reports->id.' ">
                                       '.$reports->project_name.'
-                                       </h3>
+                                      </a>  </h3>
                                      <h5>
                                      date of creation : '.$reports->created_at->format('m/d/Y') .' 
                                      </h5>
@@ -247,13 +298,8 @@ class ReportController extends Controller
                 
                 ';
             }  
-            $report = array(
-                    'table_data' => $output,
-                    'total_data' => $total_data
-
-
-            )     ;
-            json_encode($report);
+            
+          return $output;  
     
     }
 

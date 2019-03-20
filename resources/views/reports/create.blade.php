@@ -15,6 +15,15 @@
                         <p>Mesage not Saved and not delivered </p>
                       </div>
 
+                      <div class="alert alert-danger print-error-msg" style="display:none">
+                            <ul></ul>
+                            </div>
+                
+                
+                            <div class="alert alert-success print-success-msg" style="display:none">
+                            <ul></ul>
+                            </div>
+
     <div class="card bg-secondary shadow">
       <div class="card-header bg-white border-0">
         <div class="row align-items-center">
@@ -38,54 +47,12 @@
       <div class="card-body" style="color:burlywood;">
 
 
-    <form>
+    <form id="report_form">
        
        @csrf
-        <div class="form-group">
-        <label for="Project Name: ">Project Name: </label>
-        <input id="project_name" class="form-control {{ $errors->has('project_name') ? 'alert alert-danger' : '' }}" type="text" placeholder="Name of Project" name="project_name"  required>
-      </div>
-    <div class="form-group">
-        <label for="my-input">textArea</label>
-        <textarea id="project_description" class="form-control  {{ $errors->has('project_description') ? 'alert alert-danger' : '' }}" rows="3" name="project_description" ></textarea>
-    </div>
-        <div class="pl-lg-4">
-        <div class="row">
-        <div class="col-lg-4">
-
-         <div class="form-group">
-                  <label for="my-input">Number of Hours Spend: </label>
-                  <input id="no_of_hours_spend" class="form-control {{ $errors->has('no_of_hours_spend') ? 'alert alert-danger' : '' }}" type="number" name="no_of_hours_spend" placeholder="Number of Hours Spend : " >
-        </div>
-        </div>
-                    
-        <div class="col-lg-8">
-            <div class="form-group">
-                <label for="my-input">Total Number of Hours: </label>
-                <input id="no_of_total_hours" class="form-control {{ $errors->has('no_of_total_hours') ? 'alert alert-danger' : '' }}" type="number" name="no_of_total_hours" placeholder="Number of Hours Spend : "  >
-            </div>
-</div>
-</div>
-</div>
-
-
-<div class="pl-lg-4">
-        <div class="row">
-<div class="col-lg-4">
-<div class="form-group">
-    <label for="my-input">Time in </label>
-    <input id="time_in" name="time_in" class="form-control {{ $errors->has('time_in') ? 'alert alert-danger' : '' }}" type="time" >
-</div>
-</div>
-<div class="col-lg-4">
-<div class="form-group">
-    <label for="my-input">Time out</label>
-    <input id="time_out" class="form-control {{ $errors->has('time_out') ? 'alert alert-danger' : '' }}" name="time_out " type="time" >
-</div>
-</div>
-        </div>
-</div>
-
+       <table class="table table-bordered" >
+            <tr>
+                <td> 
 <div class="pl-lg-4">
         <div class="row">
                 <div class="col-lg-4">
@@ -103,6 +70,69 @@
 
         </div>
     </div>
+    
+<div class="pl-lg-4">
+        <div class="row">
+<div class="col-lg-4">
+<div class="form-group">
+    <label for="my-input">Time in </label>
+    <input id="time_in" name="time_in" class="form-control {{ $errors->has('time_in') ? 'alert alert-danger' : '' }}" type="time" >
+</div>
+</div>
+<div class="col-lg-4">
+<div class="form-group">
+    <label for="my-input">Time out</label>
+    <input id="time_out" class="form-control {{ $errors->has('time_out') ? 'alert alert-danger' : '' }}" name="time_out " type="time" >
+</div>
+</div>
+        </div>
+</div>
+                </td>
+</tr>
+</table>
+
+            {{-- table to add Projects in Report --}}
+
+
+<table class="table table-bordered" id="dynamic_field">
+        <tr>
+            <td>
+    <div class="form-group">
+                
+        <div class="col-lg-8">
+    <br>
+        <label for="Project Name: ">Project Name: </label>
+        <input id="project_name" class="form-control {{ $errors->has('project_name') ? 'alert alert-danger' : '' }} report_list" type="text" placeholder="Name of Project" name="project_name[]"  required>
+      </div>
+    </div>
+    <div class="form-group">
+        <label for="my-input">Description:</label>
+        <textarea id="project_description" class="form-control  {{ $errors->has('project_description') ? 'alert alert-danger' : '' }} report_list" rows="3" name="project_description[]" ></textarea>
+    </div>
+        <div class="pl-lg-4">
+        <div class="row">
+        <div class="col-lg-4">
+
+         <div class="form-group">
+                  <label for="my-input">Number of Hours Spend: </label>
+                  <input id="no_of_hours_spend" class="form-control {{ $errors->has('no_of_hours_spend') ? 'alert alert-danger' : '' }} report_list" type="number" name="no_of_hours_spend[]" placeholder="Number of Hours Spend : " >
+        </div>
+        </div>
+                    
+        
+</div>
+
+</div>
+</td>
+<td>
+    <button type="button" name="add" id="add" class="btn btn-success">Add More Reports</button></td>
+</tr>
+</table>
+</div>
+
+
+
+
     @include('layouts.errors')
 
 <div class="col-lg-4 mx-auto">
@@ -119,6 +149,16 @@
   
     <script>
    $(document).ready(function(){
+             var i = 1;
+              $('#add').click(function(){
+                 i++;
+             $('#dynamic_field').append(' <tr id="row'+i+' class="dynamic-added""> <td> <div class="form-group"> <div class="col-lg-8"> <br> <label for="Project Name: ">Project Name: </label> <input id="project_name" class="form-control {{ $errors->has('project_name') ? 'alert alert-danger' : '' }} report_list" type="text" placeholder="Name of Project" name="project_name[]"  required> </div></div> <div class="form-group"> <label for="my-input">Description:</label> <textarea id="project_description" class="form-control  {{ $errors->has('project_description') ? 'alert alert-danger' : '' }} report_list" rows="3" name="project_description[]" ></textarea> </div><div class="pl-lg-4"> <div class="row"><div class="col-lg-4"> <div class="form-group"><label for="my-input">Number of Hours Spend: </label><input id="no_of_hours_spend" class="form-control {{ $errors->has('no_of_hours_spend') ? 'alert alert-danger' : '' }} report_list" type="number" name="no_of_hours_spend[]" placeholder="Number of Hours Spend : " ></div></div></div></div></td><td><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove">X</button></td></tr>');
+        });
+                $(document).on('click','.btn_remove', function(){
+                var button_id = $(this).attr("id");
+                $("#row"+button_id+"").remove();
+            });
+
 
        $('#submitform').click(function(e){
                e.preventDefault();
@@ -133,10 +173,13 @@
                    method: 'post',
                    data: {
                        "_token": "{{ csrf_token() }}",
-                       project_name: jQuery('#project_name').val(),
-                       project_description: jQuery('#project_description').val(),
-                       no_of_hours_spend: jQuery('#no_of_hours_spend').val(),
-                       no_of_total_hours: jQuery('#no_of_total_hours').val(),
+
+                       "formArray":$('.report_form').serialize(),
+
+                    //    project_name: jQuery('#project_name').val(),
+                    //    project_description: jQuery('#project_description').val(),
+                    //    no_of_hours_spend: jQuery('#no_of_hours_spend').val(),
+                    //    no_of_total_hours: jQuery('#no_of_total_hours').val(),
                        time_in: jQuery('#time_in').val(),
                        time_out: jQuery('#time_out').val(),
                        no_of_hours_in_office: jQuery('#no_of_hours_in_office').val(),
@@ -144,20 +187,33 @@
                        
                     
                  },
+                 type:'json',
                  success: function(result){
+                    if(result.error){
+                        printErrorMsg(result.error);
+                    }else{
+                        i=1;
+                        $('.dynamic-added').remove();
+                        $('#add_name')[0].reset();
+                        $(".print-success-msg").find("ul").html('');
+                        $(".print-success-msg").css('display','block');
+                        $(".print-error-msg").css('display','none');
+                        $(".print-success-msg").find("ul").append('<li>Record Inserted Successfully.</li>');
+                    }
+                }  
+           });  
+      });  
 
-                    window.location='/reports';
-       },
-            error: function(result){
 
-                $('.chawal').show();
-                jQuery('.chawal').html(result.success);
-}
-
-});
-                
-              });
-           });
+      function printErrorMsg (msg) {
+         $(".print-error-msg").find("ul").html('');
+         $(".print-error-msg").css('display','block');
+         $(".print-success-msg").css('display','none');
+         $.each( msg, function( key, value ) {
+            $(".print-error-msg").find("ul").append('<li>'+value+'</li>');
+         });
+      }
+    });  
 </script> 
 
 @endsection
