@@ -94,7 +94,7 @@
             {{-- table to add Projects in Report --}}
 
 
-<table class="table table-bordered" id="dynamic_field">
+<table class="table table-bordered report_form" id="dynamic_field">
         <tr>
             <td>
     <div class="form-group">
@@ -111,7 +111,7 @@
     </div>
         <div class="pl-lg-4">
         <div class="row">
-        <div class="col-lg-4">
+        <div class="col-lg-8">
 
          <div class="form-group">
                   <label for="my-input">Number of Hours Spend: </label>
@@ -161,40 +161,47 @@
 
 
        $('#submitform').click(function(e){
+           
+        alert("startAjaxFormSubmit");
                e.preventDefault();
                jQuery.ajaxSetup({
                   headers: {
                      'X-CSRF-TOKEN': $('meta[name="_token:"]').attr('content')
                  }
                });
+               
+                    //   console.log(data);
       
                jQuery.ajax({
                    url: "{{ url('/reports') }}",
                    method: 'post',
                    data: {
                        "_token": "{{ csrf_token() }}",
-
-                       "formArray":$('.report_form').serialize(),
-
-                    //    project_name: jQuery('#project_name').val(),
-                    //    project_description: jQuery('#project_description').val(),
-                    //    no_of_hours_spend: jQuery('#no_of_hours_spend').val(),
-                    //    no_of_total_hours: jQuery('#no_of_total_hours').val(),
-                       time_in: jQuery('#time_in').val(),
-                       time_out: jQuery('#time_out').val(),
-                       no_of_hours_in_office: jQuery('#no_of_hours_in_office').val(),
-                       no_of_hour_out_of_office: jQuery('#no_of_hour_out_of_office').val(),
+                      
+                    //   "formArray" :$('.report_form').serialize(),
+                  
+                    //var data = $('input[name="project_name[]"]').serialize(),
+                       project_name: $('input[name="project_name[]"]').serialize(),
+                      
+                       project_description: $('input[name="project_description[]"]').serialize(),
+                       no_of_hours_spend: $('input[name="no_of_hours_spend[]"]').serialize(),
+                       
+                       time_in: $('#time_in').val(),
+                       time_out: $('#time_out').val(),
+                       no_of_hours_in_office: $('#no_of_hours_in_office').val(),
+                       no_of_hour_out_of_office: $('#no_of_hour_out_of_office').val(),
                        
                     
                  },
-                 type:'json',
+                 
+                
                  success: function(result){
                     if(result.error){
                         printErrorMsg(result.error);
                     }else{
                         i=1;
                         $('.dynamic-added').remove();
-                        $('#add_name')[0].reset();
+                       // $('#add_name')[0].reset();
                         $(".print-success-msg").find("ul").html('');
                         $(".print-success-msg").css('display','block');
                         $(".print-error-msg").css('display','none');

@@ -34,9 +34,9 @@ class HomeController extends Controller
 
         // permission::create([
 
-        //     'name'=>'create reports',
+        //     //'name'=>'create reports',
         //     'name'=>'view all reports',
-        //     'name'=>'view reports'
+        //     //'name'=>'view reports'
         // ]);
 
       

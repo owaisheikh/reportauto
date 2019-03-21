@@ -20,7 +20,6 @@ class CreateReportsTable extends Migration
             $table->text('project_description');
             $table->integer('owner_id');
             $table->smallInteger('no_of_hours_spend');
-            $table->smallInteger('no_of_total_hours');
             $table->time('time_in');
             $table->time('time_out');
             $table->integer('no_of_hours_in_office');
